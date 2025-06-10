@@ -1,0 +1,34 @@
+THEORETICAL BACKGROUND FOR GAME-THEORETIC MOE:
+
+Core Mathematical Frameworks:
+1. Von Neumann-Morgenstern Game Theory
+   - Minimax theorem for zero-sum games
+   - Nash equilibrium existence (Kakutani fixed point)
+   - Connection to linear programming duality
+
+2. Information Theory & Maximum Entropy
+   - Shannon entropy as special case (q→1)
+   - Tsallis entropy and q-exponential families
+   - Rényi entropy connections
+
+3. Optimal Transport Theory
+   - Kantorovich duality
+   - Wasserstein distances
+   - Connection to distributionally robust optimization
+
+4. Online Learning Theory
+   - No-regret learning (Hannan consistency)
+   - Mirror descent in Banach spaces
+   - Multiplicative weights and entropic regularization
+
+Key Theorems to Reference:
+- Sion's minimax theorem (infinite dimensions)
+- Blackwell's approachability theorem
+- Cover's universal portfolio theorem
+- Entropic CLT (Barron, 1986)
+
+Important Connections:
+- Quantal Response Equilibrium (McKelvey & Palfrey)
+- Maximum entropy inverse RL (Ziebart et al.)
+- Distributionally robust optimization (Ben-Tal et al.)
+- Information-theoretic bounded rationality (Ortega & Braun)

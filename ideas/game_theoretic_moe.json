@@ -1,0 +1,12 @@
+{
+    "Name": "Game-Theoretic Expert Selection with Adversarial Robustness",
+    "Title": "Nash Equilibrium Routing Strategies for Mixture-of-Experts under Adversarial Uncertainty",
+    "Experiment": "Implement and analyze game-theoretic routing strategies using Tsallis entropy regularization. Compare with softmax and sparsemax under adversarial perturbations.",
+    "Interestingness": 9,
+    "Feasibility": 8,
+    "Novelty": 9,
+    "novel": true,
+    "Description": "Model expert selection as a two-player zero-sum game between a Selector maximizing utility and adversarial Nature introducing worst-case perturbations. Derive Nash equilibrium strategies with endogenous Tsallis entropy regularization.",
+    "Datasets": ["CIFAR-10", "MNIST", "Fashion-MNIST"],
+    "MainFile": "game_theoretic_moe.py"
+}

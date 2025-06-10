@@ -1,0 +1,29 @@
+# Copy most settings from original but modify prompts
+data_dir: "data"
+log_dir: logs
+workspace_dir: workspaces
+copy_data: True
+
+agent:
+  type: parallel
+  num_workers: 4
+  stages:
+    stage1_max_iters: 25  # More iterations for theory
+    stage2_max_iters: 15
+    stage3_max_iters: 20  # More creative research
+    stage4_max_iters: 20
+  
+  code:
+    model: claude-3-5-sonnet-20241022
+    temp: 0.7  # Lower temperature for more focused theory
+    max_tokens: 16000  # More tokens for detailed proofs
+    
+  # Add custom system prompt for theoretical depth
+  system_prompt: |
+    You are a theoretical computer science researcher focused on rigorous mathematical foundations.
+    Prioritize:
+    1. Formal theorem statements with complete proofs
+    2. Connections to established theory (game theory, optimization, information theory)
+    3. Novel theoretical insights over implementation details
+    4. Mathematical rigor over empirical results
+    When implementing, focus on validating theoretical predictions rather than engineering optimizations.

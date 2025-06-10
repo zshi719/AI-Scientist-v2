@@ -1,0 +1,48 @@
+[
+  {
+    "Name": "game_theoretic_moe_enriched",
+    "Title": "Game-Theoretic Foundations of Expert Selection: From Nash Equilibria to Tsallis Entropy",
+    
+    "Short Hypothesis": "We establish that expert selection in MoE architectures admits a rigorous game-theoretic foundation where routing strategies emerge as Nash equilibria of a zero-sum game. We prove that the minimax equilibrium naturally yields Tsallis entropy regularization, where q emerges from the tail properties of uncertainty distributions. This provides the first axiomatic derivation of routing functions from first principles, unifying softmax (q→1), sparsemax (q=2), and ultra-sparse (q>2) strategies as special cases of a general equilibrium framework. We further establish convergence rates for no-regret learning algorithms and characterize the Price of Robustness.",
+    
+    "Related Work": "Current MoE routing mechanisms lack theoretical foundations. Shazeer et al. (2017) introduced top-k gating heuristically. Martins & Astudillo (2016) proposed sparsemax based on sparsity desiderata. Peters et al. (2019) introduced α-entmax without game-theoretic justification. Our work differs fundamentally by deriving these as equilibrium strategies. Related theoretical work includes: (1) Distributionally robust optimization (Kuhn et al., 2019; Delage & Ye, 2010) which we extend via game theory, (2) Quantal response equilibria (McKelvey & Palfrey, 1995) which we generalize to Tsallis entropy, (3) Online learning in games (Cesa-Bianchi & Lugosi, 2006) which we apply to derive convergence guarantees. No prior work derives MoE routing from equilibrium theory or establishes the noise-entropy correspondence we prove.",
+    
+    "Abstract": "Expert selection in Mixture-of-Experts architectures represents a fundamental challenge in machine learning: how to route inputs to specialized sub-networks under uncertainty about their performance. We introduce a rigorous game-theoretic framework that models this as a two-player zero-sum game between a utility-maximizing Selector and an adversarial Nature controlling uncertainty. Our main theoretical contribution is proving that Nash equilibrium strategies of this game yield Tsallis entropy regularized routing, where the entropy parameter q emerges endogenously from assumptions about uncertainty distributions. Specifically, we establish: (1) A noise-routing correspondence theorem showing exponential-tailed uncertainty yields softmax (q→1), uniform bounded noise yields sparsemax (q=2), and Pareto-distributed heavy-tailed noise yields ultra-sparse routing (q>2). (2) Existence and uniqueness of equilibria via von Neumann's minimax theorem with closed-form solutions. (3) Convergence rates O(√T) for no-regret learning algorithms. (4) Tight bounds on the Price of Robustness. Our framework provides the first principled explanation for the success of various routing mechanisms and enables post-training control of sparsity through the lens of strategic robustness. Experiments on language modeling and vision tasks validate our theoretical predictions, demonstrating that game-theoretically derived routing achieves superior performance while providing interpretable connections between environmental uncertainty and optimal routing strategies.",
+    
+    "Experiments": [
+      {
+        "name": "Theoretical Validation: Noise-Routing Correspondence",
+        "description": "Empirically verify the theoretical prediction that different noise distributions induce different optimal routing strategies. Generate synthetic expert utilities with controlled noise (Gumbel for q→1, Uniform for q=2, Pareto for q>2). Train MoE models and measure: (1) KL divergence between empirical and theoretical routing distributions, (2) Convergence to predicted Nash equilibrium, (3) Empirical vs theoretical Price of Robustness.",
+        "algorithmic_changes": "Implement exact Nash equilibrium computation via convex optimization. Compare with gradient-based learning dynamics."
+      },
+      {
+        "name": "Convergence Analysis of No-Regret Learning",
+        "description": "Implement and compare convergence rates of different no-regret algorithms: (1) Multiplicative Weights Update, (2) Mirror Descent with Tsallis divergence, (3) Optimistic Dual Averaging. Track regret bounds over T rounds and verify O(√T) theoretical predictions. Test on both synthetic and real routing problems.",
+        "algorithmic_changes": "Implement MWU: w_t+1,i = w_t,i * exp(η * u_t,i), Mirror Descent: p_t+1 = argmin{<g_t,p> + D_q(p||p_t)/η}, ODA with adaptive regularization."
+      },
+      {
+        "name": "Price of Robustness Characterization",
+        "description": "Quantify the performance gap between robust game-theoretic routing and oracle routing with perfect information. Vary uncertainty levels and measure: (1) Nominal performance under no noise, (2) Worst-case performance under adversarial noise, (3) Average-case performance. Validate theoretical PoR bounds.",
+        "algorithmic_changes": "Implement both minimax robust routing and oracle routing. Compute empirical PoR = (Oracle_Utility - Robust_Utility) / Oracle_Utility."
+      },
+      {
+        "name": "Equilibrium Learning in Multi-Agent Settings",
+        "description": "Extend to scenarios with multiple interacting routers. Implement distributed MWU and verify convergence to correlated equilibria. Measure social welfare and individual regret bounds in competitive routing scenarios.",
+        "algorithmic_changes": "Distributed MWU with communication rounds. Track both individual and social regret."
+      },
+      {
+        "name": "Real-World Validation on Language and Vision",
+        "description": "Apply game-theoretic routing to: (1) Transformer-based language models with MoE layers, (2) Vision transformers with conditional computation. Compare against baselines on standard benchmarks while measuring robustness to adversarial perturbations.",
+        "algorithmic_changes": "Integration with existing MoE architectures. Post-training q adaptation without expert retraining."
+      }
+    ],
+    
+    "Risk Factors and Limitations": [
+      "Computational complexity: Nash equilibrium computation requires solving convex optimization problems, though we provide efficient algorithms.",
+      "Assumption validity: The marginal ambiguity set assumption may not capture all forms of uncertainty correlation.",
+      "Finite-sample considerations: Theoretical guarantees are asymptotic; finite-sample performance requires careful analysis.",
+      "Multi-level hierarchies: Extension to hierarchical MoE with multiple routing levels requires additional theoretical development.",
+      "Continuous adaptation: While post-training q adjustment is possible, continuous online adaptation requires further investigation."
+    ]
+  }
+]

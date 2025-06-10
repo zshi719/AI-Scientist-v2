@@ -1,0 +1,48 @@
+[
+  {
+    "Name": "game_theoretic_moe",
+    "Title": "Adversarial Expert Selection as a Zero-Sum Game with Endogenous Tsallis Regularization",
+    
+    "Short Hypothesis": "Expert selection in Mixture-of-Experts can be formulated as a two-player zero-sum game between a utility-maximizing Selector and an adversarial Nature. This game-theoretic formulation naturally gives rise to Tsallis entropy regularization in the optimal routing strategy, where the entropy parameter q emerges from assumptions about the tail properties of utility uncertainty. This provides a principled explanation for why different routing functions (softmax, sparsemax, ultra-sparse) are optimal under different uncertainty conditions.",
+    
+    "Related Work": "Existing MoE routing mechanisms like softmax (Shazeer et al., 2017), sparsemax (Martins & Astudillo, 2016), and top-k gating (Fedus et al., 2022) have been developed heuristically. While α-entmax (Peters et al., 2019) introduced Tsallis entropy for attention, no work has provided a game-theoretic foundation explaining when and why these different routing functions are optimal. Our work uniquely derives these as Nash equilibrium strategies under varying uncertainty assumptions, moving beyond heuristic design to principled theory.",
+    
+    "Abstract": "The selection of experts in Mixture-of-Experts (MoE) architectures presents a fundamental challenge in decision-making under uncertainty. We introduce a rigorous game-theoretic framework that recasts expert selection as a two-player zero-sum game between a Selector, aiming to maximize utility, and an adversarial Nature, representing worst-case utility perturbations. We demonstrate that robust selection strategies, specifically those regularized by Tsallis entropy, emerge endogenously as the Selector's unique Nash equilibrium response. This framework provides the first principled explanation for the optimality of diverse selection behaviors—recovering softmax (q→1), sparsemax (q=2), and novel ultra-sparse strategies (q>2) as specific equilibrium outcomes corresponding to varying tail properties of utility uncertainty. We prove existence and uniqueness of equilibria, derive closed-form solutions, and show how different assumptions about uncertainty naturally lead to different optimal routing strategies. Experiments validate our theoretical predictions, showing that game-theoretic routing achieves comparable performance to existing methods while providing robustness guarantees and interpretable connections between uncertainty models and routing behavior.",
+    
+    "Experiments": [
+      {
+        "name": "Sparsity-Performance Trade-off Analysis",
+        "description": "Implement MoE with game-theoretic routing using different q values (1.0, 1.5, 2.0, 2.5, 3.0). Train on image classification (CIFAR-10) and language modeling tasks. Measure: (1) average number of active experts, (2) routing concentration (Gini coefficient), (3) task performance (accuracy/perplexity), (4) computational efficiency (FLOPs). Compare against baseline softmax and top-k routing.",
+        "algorithmic_changes": "Replace standard softmax gating with Tsallis-regularized routing: p_i = [(u_i/T - τ)^(1/(q-1))]_+ normalized, where τ is computed via bisection to ensure sum(p_i)=1."
+      },
+      {
+        "name": "Adversarial Robustness Evaluation", 
+        "description": "Test robustness by injecting adversarial noise into expert utilities during inference. For each q value, add noise from different distributions (Gaussian, uniform, Pareto) and measure performance degradation. Compute Price of Robustness as the gap between nominal and worst-case performance.",
+        "algorithmic_changes": "During evaluation, perturb utilities as u_i' = u_i + ε_i where ε_i follows specified distributions. Measure performance drop relative to clean utilities."
+      },
+      {
+        "name": "Nash Equilibrium Convergence",
+        "description": "Implement online learning algorithms (multiplicative weight updates, mirror descent with Tsallis divergence) to learn routing strategies. Track convergence to theoretical Nash equilibrium over iterations. Measure KL divergence between learned and analytical equilibrium strategies.",
+        "algorithmic_changes": "Use mirror descent update: p_{t+1} = argmin_{p∈Δ} {⟨∇L_t, p⟩ + (1/η)D_q(p||p_t)} where D_q is Tsallis divergence."
+      },
+      {
+        "name": "Noise Distribution Impact Analysis",
+        "description": "Train separate MoE models assuming different noise distributions (exponential→q=1, uniform→q=2, Pareto→q>2) and evaluate which performs best under various test-time perturbations. This validates the theoretical prediction that q should match the tail properties of the actual uncertainty.",
+        "algorithmic_changes": "Train three model variants with q∈{1.0, 2.0, 3.0} and test each against exponential, uniform, and heavy-tailed noise perturbations."
+      },
+      {
+        "name": "Computational Scaling Analysis",
+        "description": "Compare computational cost of computing Nash equilibrium routing vs standard methods. Measure wall-clock time for different numbers of experts (8, 16, 32, 64). Analyze how threshold computation (bisection) scales.",
+        "algorithmic_changes": "Profile the routing forward pass, focusing on threshold computation time. Implement optimized bisection with early stopping."
+      }
+    ],
+    
+    "Risk Factors and Limitations": [
+      "Computational overhead: Computing the threshold τ via bisection adds latency compared to simple softmax. Need efficient implementation.",
+      "Theoretical assumptions: The game-theoretic model assumes worst-case adversarial perturbations, which may be overly conservative for some applications.",
+      "Limited to marginal constraints: Current formulation uses marginal ambiguity sets; extending to general Wasserstein constraints is non-trivial.",
+      "Hyperparameter sensitivity: Performance may be sensitive to temperature T and prior assumptions about noise distributions.",
+      "Scalability questions: While theory is general, practical benefits may diminish with very large numbers of experts due to optimization complexity."
+    ]
+  }
+]
